@@ -1,6 +1,6 @@
 package Sorting;
 
-public class Insertion extends AbstractSort{
+public class Insertion extends AbstractSort {
     public static void sort(Comparable[] a){
         int N = a.length;
         for(int i = 1; i < N; i++){
@@ -17,3 +17,6 @@ public class Insertion extends AbstractSort{
         Insertion.show(a);
     }
 }
+
+
+
