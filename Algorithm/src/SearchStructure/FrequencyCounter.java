@@ -1,4 +1,4 @@
-package SequentialSearch;
+package SearchStructure;
 
 import java.io.File;
 import java.io.FileNotFoundException;

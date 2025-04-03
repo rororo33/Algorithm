@@ -1,4 +1,4 @@
-// 20241234 홍길동
+// 22112026 우영민
 import java.util.Scanner;
 import java.io.File;
 import java.io.IOException;
@@ -6,7 +6,8 @@ import java.io.IOException;
 public class HW1 {
 
     static class GasStation implements Comparable<GasStation> {
-        double x, y, distance;
+        double x, y;
+        double distance;
 
         GasStation(double x, double y, double distance) {
             this.x = x;
@@ -29,15 +30,7 @@ public class HW1 {
         System.out.print("k의 값? ");
         int kInput = sc.nextInt();
 
-        System.out.print("실행할 방법 선택 (1: 기본, 2: 개선)? ");
-        int method = sc.nextInt();
-
         sc.close();
-
-        if (method != 1 && method != 2) {
-            System.out.println("1 또는 2를 선택하세요.");
-            return;
-        }
 
         Scanner fileScanner = null;
 
@@ -47,42 +40,31 @@ public class HW1 {
             double currX = fileScanner.nextDouble();
             double currY = fileScanner.nextDouble();
 
-            int fileK = fileScanner.nextInt(); // 무시
+            int fileK = fileScanner.nextInt();
             int n = fileScanner.nextInt();
 
-            GasStation[] allStations = new GasStation[n];
+            GasStation[] stations = new GasStation[n];
+
             for (int i = 0; i < n; i++) {
                 double x = fileScanner.nextDouble();
                 double y = fileScanner.nextDouble();
-                double dist = euclideanDistance(currX, currY, x, y);
-                allStations[i] = new GasStation(x, y, dist);
+                double dist = Distance(currX, currY, x, y);
+                stations[i] = new GasStation(x, y, dist);
             }
-
-            int k = (kInput == -1 || kInput > n) ? n : kInput;
-            GasStation[] result;
 
             long startTime = System.currentTimeMillis();
 
-            if (method == 1 || k == n) {
-                // 기본 방법 또는 k == n → 전체 정렬
-                BottomUpMergeSort.sort(allStations);
-                result = new GasStation[k];
-                System.arraycopy(allStations, 0, result, 0, k);
-            } else {
-                // 개선된 방법 → MaxHeap 기반 Top-k 추출
-                MaxHeap heap = new MaxHeap(k);
-                for (GasStation gs : allStations) {
-                    heap.offer(gs);
-                }
-                result = heap.toSortedArray(); // 오름차순 정렬된 k개 결과
-            }
+            BottomUpMergeSort.sort(stations);
 
             long endTime = System.currentTimeMillis();
             long elapsedTime = endTime - startTime;
 
+            int k = (kInput == -1 || kInput > n) ? n : kInput;
+
             System.out.printf("k = %d일 때의 실행시간 = %dms\n", k, elapsedTime);
-            for (int i = 0; i < result.length; i++) {
-                GasStation gs = result[i];
+
+            for (int i = 0; i < k; i++) {
+                GasStation gs = stations[i];
                 System.out.printf("%d: (%.6f, %.6f) 거리 = %.6f\n", i, gs.x, gs.y, gs.distance);
             }
 
@@ -93,15 +75,15 @@ public class HW1 {
         }
     }
 
-    static double euclideanDistance(double x1, double y1, double x2, double y2) {
+    static double Distance(double x1, double y1, double x2, double y2) {
         double dx = x1 - x2;
         double dy = y1 - y2;
         return Math.sqrt(dx * dx + dy * dy);
     }
 }
 
-// Bottom-Up Merge Sort
 class BottomUpMergeSort {
+
     private static boolean less(Comparable a, Comparable b) {
         return a.compareTo(b) < 0;
     }
@@ -128,53 +110,3 @@ class BottomUpMergeSort {
     }
 }
 
-// MaxHeap 기반 Top-k 추출
-class MaxHeap {
-    private HW1.GasStation[] heap;
-    private int size;
-
-    public MaxHeap(int capacity) {
-        heap = new HW1.GasStation[capacity + 1];
-        size = 0;
-    }
-
-    public void offer(HW1.GasStation gs) {
-        if (size < heap.length - 1) {
-            heap[++size] = gs;
-            swim(size);
-        } else if (gs.distance < heap[1].distance) {
-            heap[1] = gs;
-            sink(1);
-        }
-    }
-
-    public HW1.GasStation[] toSortedArray() {
-        HW1.GasStation[] result = new HW1.GasStation[size];
-        for (int i = 1; i <= size; i++) result[i - 1] = heap[i];
-        BottomUpMergeSort.sort(result);
-        return result;
-    }
-
-    private void swim(int k) {
-        while (k > 1 && heap[k].distance > heap[k / 2].distance) {
-            swap(k, k / 2);
-            k /= 2;
-        }
-    }
-
-    private void sink(int k) {
-        while (2 * k <= size) {
-            int j = 2 * k;
-            if (j < size && heap[j].distance < heap[j + 1].distance) j++;
-            if (heap[k].distance >= heap[j].distance) break;
-            swap(k, j);
-            k = j;
-        }
-    }
-
-    private void swap(int i, int j) {
-        HW1.GasStation tmp = heap[i];
-        heap[i] = heap[j];
-        heap[j] = tmp;
-    }
-}

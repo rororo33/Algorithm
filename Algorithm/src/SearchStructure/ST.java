@@ -1,4 +1,4 @@
-package SequentialSearch;
+package SearchStructure;
 
 public interface ST<K, V> {
     V get(K key);               // 값 검색

@@ -1,4 +1,4 @@
-package SequentialSearch;
+package SearchStructure;
 
 import javax.swing.*;
 import java.io.File;
