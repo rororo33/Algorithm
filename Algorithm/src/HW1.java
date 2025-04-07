@@ -3,85 +3,6 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.IOException;
 
-public class HW1 {
-
-    static class GasStation implements Comparable<GasStation> {
-        double x, y;
-        double distance;
-
-        GasStation(double x, double y, double distance) {
-            this.x = x;
-            this.y = y;
-            this.distance = distance;
-        }
-
-        @Override
-        public int compareTo(GasStation other) {
-            return Double.compare(this.distance, other.distance);
-        }
-    }
-
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        System.out.print("파일 이름? ");
-        String fname = sc.nextLine();
-
-        System.out.print("k의 값? ");
-        int kInput = sc.nextInt();
-
-        sc.close();
-
-        Scanner fileScanner = null;
-
-        try {
-            fileScanner = new Scanner(new File(fname));
-
-            double currX = fileScanner.nextDouble();
-            double currY = fileScanner.nextDouble();
-
-            int fileK = fileScanner.nextInt();
-            int n = fileScanner.nextInt();
-
-            GasStation[] stations = new GasStation[n];
-
-            for (int i = 0; i < n; i++) {
-                double x = fileScanner.nextDouble();
-                double y = fileScanner.nextDouble();
-                double dist = Distance(currX, currY, x, y);
-                stations[i] = new GasStation(x, y, dist);
-            }
-
-            long startTime = System.currentTimeMillis();
-
-            BottomUpMergeSort.sort(stations);
-
-            long endTime = System.currentTimeMillis();
-            long elapsedTime = endTime - startTime;
-
-            int k = (kInput == -1 || kInput > n) ? n : kInput;
-
-            System.out.printf("k = %d일 때의 실행시간 = %dms\n", k, elapsedTime);
-
-            for (int i = 0; i < k; i++) {
-                GasStation gs = stations[i];
-                System.out.printf("%d: (%.6f, %.6f) 거리 = %.6f\n", i, gs.x, gs.y, gs.distance);
-            }
-
-        } catch (IOException e) {
-            System.out.println(e);
-        } finally {
-            if (fileScanner != null) fileScanner.close();
-        }
-    }
-
-    static double Distance(double x1, double y1, double x2, double y2) {
-        double dx = x1 - x2;
-        double dy = y1 - y2;
-        return Math.sqrt(dx * dx + dy * dy);
-    }
-}
-
 class BottomUpMergeSort {
 
     private static boolean less(Comparable a, Comparable b) {
@@ -109,4 +30,85 @@ class BottomUpMergeSort {
         if (src != a) System.arraycopy(src, 0, a, 0, N);
     }
 }
+
+public class HW1 {
+
+    static class stationInfo implements Comparable<stationInfo> {
+        double x, y;
+        double distance;
+
+        stationInfo(double x, double y, double distance) {
+            this.x = x;
+            this.y = y;
+            this.distance = distance;
+        }
+
+        @Override
+        public int compareTo(stationInfo other) {
+            return Double.compare(this.distance, other.distance);
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("파일 이름? ");
+        String fname = sc.nextLine();
+
+        System.out.print("k의 값? ");
+        int kInput = sc.nextInt();
+
+        sc.close();
+
+        Scanner fileScanner = null;
+
+        try {
+            fileScanner = new Scanner(new File(fname));
+
+            double currX = fileScanner.nextDouble();
+            double currY = fileScanner.nextDouble();
+
+            int fileK = fileScanner.nextInt();
+            int n = fileScanner.nextInt();
+
+            stationInfo[] stations = new stationInfo[n];
+
+            for (int i = 0; i < n; i++) {
+                double x = fileScanner.nextDouble();
+                double y = fileScanner.nextDouble();
+                double dist = Distance(currX, currY, x, y);
+                stations[i] = new stationInfo(x, y, dist);
+            }
+
+            long startTime = System.currentTimeMillis();
+
+            BottomUpMergeSort.sort(stations);
+
+            long endTime = System.currentTimeMillis();
+            long elapsedTime = endTime - startTime;
+
+            int k = (kInput == -1 || kInput > n) ? n : kInput;
+
+            System.out.printf("k = %d일 때의 실행시간 = %dms\n", k, elapsedTime);
+
+            for (int i = 0; i < k; i++) {
+                stationInfo gs = stations[i];
+                System.out.printf("%d: (%.6f, %.6f) 거리 = %.6f\n", i, gs.x, gs.y, gs.distance);
+            }
+
+        } catch (IOException e) {
+            System.out.println(e);
+        } finally {
+            if (fileScanner != null) fileScanner.close();
+        }
+    }
+
+    static double Distance(double x1, double y1, double x2, double y2) {
+        double dx = x1 - x2;
+        double dy = y1 - y2;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+}
+
+
 
