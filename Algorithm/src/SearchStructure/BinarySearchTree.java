@@ -30,7 +30,7 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
     private int size(Node<K, V> x) {
         return (x == null) ? 0 : x.N;
     }
-    
+
     private Node<K, V> treeSearch(K key){
         Node<K, V> x = root;
         while(true){
